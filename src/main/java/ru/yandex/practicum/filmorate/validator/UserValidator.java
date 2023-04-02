@@ -30,7 +30,7 @@ public class UserValidator {
 
     private boolean isBirthInFuture(User user) {
         LocalDate now = LocalDate.now();
-        if (user.getBirthday().isBefore(now) ) {
+        if (user.getBirthday().isBefore(now)) {
             return false;
         } else {
             log.warn("Birthday in the future");
