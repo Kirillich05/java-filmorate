@@ -19,7 +19,7 @@ public class User {
     @NotNull
     private String login;
     private String name;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate birthday;
 
