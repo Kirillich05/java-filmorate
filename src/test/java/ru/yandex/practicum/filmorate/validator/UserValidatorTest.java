@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.dao.UserRepository;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -62,7 +62,7 @@ public class UserValidatorTest {
     @Test
     void checkGeneratedId() {
         UserValidator userValidator = new UserValidator();
-        UserRepository userRepository = new UserRepository();
+        InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
         User user = new User();
         user.setEmail("karnel@yandex.ru");
@@ -71,7 +71,7 @@ public class UserValidatorTest {
         user.setBirthday(birth);
         user.setName("Karl");
         if (userValidator.validate(user)) {
-            userRepository.save(user);
+            inMemoryUserStorage.save(user);
         }
         assertEquals(1, user.getId());
     }

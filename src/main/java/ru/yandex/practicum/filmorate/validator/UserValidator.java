@@ -20,7 +20,7 @@ public class UserValidator {
     }
 
     private boolean isEmptyLogin(User user) {
-        if (!user.getLogin().isBlank() ) {
+        if (!user.getLogin().isBlank()) {
             return false;
         } else {
             log.warn("Login is empty or contains spaces: {}", user);
@@ -39,15 +39,12 @@ public class UserValidator {
     }
 
     private boolean isEmptyName(User user) {
-        if (user.getName() == null) {
-            return true;
-        }
-        return false;
+        return user.getName().isBlank();
     }
 
     public boolean validate(User user) {
         if (!isEmptyEmail(user) && !isEmptyLogin(user) && !isBirthInFuture(user)) {
-            if (isEmptyName(user)) {
+            if (user.getName() == null || isEmptyName(user)) {
                 user.setName(user.getLogin());
             }
             return true;

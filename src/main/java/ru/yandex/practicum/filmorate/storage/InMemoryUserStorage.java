@@ -1,27 +1,27 @@
-package ru.yandex.practicum.filmorate.dao;
+package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validator.ValidationException;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class UserRepository {
+public class InMemoryUserStorage implements UserStorage {
     private int generatorId = 0;
     private final Map<Integer, User> users = new HashMap<>();
 
-    public int generateId() {
+    private int generateId() {
         return ++generatorId;
     }
 
     public void save(User user) {
-        if (user.getId() != 0 && !users.containsKey(user.getId())) {
+        if (user.getId() != 0 && users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         } else {
-            Integer id = generateId();
+            int id = generateId();
             user.setId(id);
             users.put(id, user);
         }
@@ -31,7 +31,7 @@ public class UserRepository {
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         } else {
-            throw new ValidationException("Don't update because there isn't " + user.getId() +
+            throw new ModelNotFoundException("Don't update because there isn't " + user.getId() +
                     " in the repository");
         }
     }
