@@ -78,4 +78,13 @@ public class FilmService {
                     return new ModelNotFoundException(String.format("Film № %d не найден", id));
                 });
     }
+
+    public void deleteLikesFromUser(int userId) {
+        for (Film film : filmStorage.getFilms()) {
+            if (film.getLikes().contains(userId)) {
+                log.info("Removed film (id '{}') like from user with id'{}'", film.getId(),userId);
+                deleteLike(film.getId(), userId);
+            }
+        }
+    }
 }

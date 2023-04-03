@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -9,21 +11,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
 
     @NotNull
-    private int id;
+    int id;
     @NotNull
-    private String name;
+    String name;
     @NotNull
-    private String description;
+    String description;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate releaseDate;
+    LocalDate releaseDate;
     @NotNull
-    private long duration;
+    long duration;
 
-    private Set<Integer> likes = new HashSet<>();
+    Set<Integer> likes = new HashSet<>();
 
     public int getAmountFilmLikes() {
         return likes.size();

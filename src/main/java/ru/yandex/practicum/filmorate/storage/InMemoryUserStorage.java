@@ -17,6 +17,7 @@ public class InMemoryUserStorage implements UserStorage {
         return ++generatorId;
     }
 
+    @Override
     public void save(User user) {
         if (user.getId() != 0 && users.containsKey(user.getId())) {
             users.put(user.getId(), user);
@@ -27,6 +28,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    @Override
     public void update(User user) {
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
@@ -36,7 +38,25 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    @Override
+    public String delete(int id) {
+        if (!users.containsKey(id)) {
+            throw new ModelNotFoundException("Don't delete user because there isn't " + id +
+                    " in the repository");
+        }
+        users.remove(id);
+        deleteUserFromFriends(id);
+        return String.format("User with id %d is deleted", id);
+    }
+
+    @Override
     public Collection<User> getUsers() {
         return users.values();
+    }
+
+    private void deleteUserFromFriends(int id) {
+        for (User user : users.values()) {
+            user.getFriends().remove(id);
+        }
     }
 }

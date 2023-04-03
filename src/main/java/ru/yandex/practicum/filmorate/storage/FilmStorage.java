@@ -9,5 +9,7 @@ public interface FilmStorage {
 
     void update(Film film);
 
+    String delete(int id);
+
     Collection<Film> getFilms();
 }

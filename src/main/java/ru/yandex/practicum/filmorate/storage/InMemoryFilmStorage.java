@@ -17,6 +17,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return ++generatorId;
     }
 
+    @Override
     public void save(Film film) {
         if (film.getId() != 0 && films.containsKey(film.getId())) {
             films.put(film.getId(), film);
@@ -27,6 +28,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
     }
 
+    @Override
     public void update(Film film) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
@@ -36,6 +38,18 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public String delete(int id) {
+        if (films.containsKey(id)) {
+            films.remove(id);
+            return String.format("Film with id %d is deleted", id);
+        } else {
+            throw new ModelNotFoundException("Don't delete film because there isn't " + id +
+                    " in the repository");
+        }
+    }
+
+    @Override
     public Collection<Film> getFilms() {
         return films.values();
     }

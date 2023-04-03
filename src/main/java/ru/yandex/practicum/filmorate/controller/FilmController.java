@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -19,11 +21,12 @@ import java.util.List;
 @RequestMapping("/films")
 @Validated
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FilmController {
 
-    private final FilmStorage repository;
-    private final FilmValidator filmValidator;
-    private final FilmService filmService;
+    FilmStorage repository;
+    FilmValidator filmValidator;
+    FilmService filmService;
 
     @Autowired
     public FilmController(FilmStorage repository, FilmValidator filmValidator,
@@ -58,6 +61,13 @@ public class FilmController {
             log.info("Method: PUT; updated film with ID = " + film.getId());
         }
         return film;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteFilm(@PathVariable int id) {
+        log.info("Method: DELETE; delete film with ID = " + id);
+        return repository.delete(id);
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
@@ -15,12 +17,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class FilmServiceTest {
 
-    private UserStorage userStorage;
-    private FilmStorage filmStorage;
-    private FilmService filmService;
-    private Film film;
+    UserStorage userStorage;
+    FilmStorage filmStorage;
+    FilmService filmService;
+    Film film;
 
     @BeforeEach
     public void init() {

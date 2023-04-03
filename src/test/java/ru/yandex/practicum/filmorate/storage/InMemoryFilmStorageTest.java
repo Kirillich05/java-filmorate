@@ -84,6 +84,24 @@ class InMemoryFilmStorageTest {
     }
 
     @Test
+    void delete() {
+        filmStorage.save(film1);
+        filmStorage.save(film2);
+        assertEquals(1, film1.getId(), "Не верный id фильма");
+        assertEquals(2, filmStorage.getFilms().size(),
+                "Неверное количество фильмов в репозитории");
+
+        assertThrows(ModelNotFoundException.class, () -> filmStorage.delete(101));
+
+        filmStorage.delete(film1.getId());
+        assertEquals(1, filmStorage.getFilms().size(),
+                "Неверное количество фильмов в репозитории после удаления");
+        List<Film> films = new ArrayList<>(filmStorage.getFilms());
+        assertEquals(film2, films.get(0),
+                "Не совпадают фильмы в репозитории после удаления");
+    }
+
+    @Test
     void getFilms() {
         filmStorage.save(film1);
         assertEquals(1, film1.getId(), "Не верный id фильма");

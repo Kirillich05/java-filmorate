@@ -10,6 +10,8 @@ public interface UserStorage {
 
     void update(User user);
 
+    String delete(int id);
+
     Collection<User> getUsers();
 
 }

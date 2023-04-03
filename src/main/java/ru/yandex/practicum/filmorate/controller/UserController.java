@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -17,18 +20,21 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
-    private final UserStorage repository;
-    private final UserValidator userValidator;
-    private final UserService userService;
+    UserStorage repository;
+    UserValidator userValidator;
+    UserService userService;
+    FilmService filmService;
 
     @Autowired
     public UserController(UserStorage repository, UserValidator userValidator,
-                          UserService userService) {
+                          UserService userService, FilmService filmService) {
         this.repository = repository;
         this.userValidator = userValidator;
         this.userService = userService;
+        this.filmService = filmService;
     }
 
     @GetMapping
@@ -56,6 +62,14 @@ public class UserController {
             log.info("Method: PUT; updated user with ID = " + user.getId());
         }
         return user;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteUser(@PathVariable int id) {
+        log.info("Method: DELETE; delete user with ID = " + id);
+        filmService.deleteLikesFromUser(id);
+        return repository.delete(id);
     }
 
     @GetMapping("/{userId}")
