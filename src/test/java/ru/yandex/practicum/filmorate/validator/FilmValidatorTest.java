@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.dao.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -59,7 +59,7 @@ class FilmValidatorTest {
     @Test
     void checkGeneratedId() {
         FilmValidator filmValidator = new FilmValidator();
-        FilmRepository filmRepository = new FilmRepository();
+        InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
 
         Film film = new Film();
         film.setName("Terminator");
@@ -67,7 +67,7 @@ class FilmValidatorTest {
         film.setReleaseDate(LocalDate.of(1920, 10, 20));
         film.setDescription("About Arnold");
         if (filmValidator.validate(film)) {
-            filmRepository.save(film);
+            inMemoryFilmStorage.save(film);
         }
         assertEquals(1, film.getId());
     }
