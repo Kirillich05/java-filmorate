@@ -43,7 +43,7 @@ public class FilmService {
         User user = userService.findUserById(userId);
         if (!userStorage.getUsers().contains(user) || filmStorage.getFilm(filmId).isEmpty()) {
             log.warn("User'{}' did not like film with id {}", userId, filmId);
-            throw new ModelNotFoundException(String.format("User'{}' did not like film with id {}", userId, filmId));
+            throw new ModelNotFoundException(String.format("User %d did not like film with id %d", userId, filmId));
         }
         log.info("User'{}' likes film with id {}", userId, filmId);
         filmStorage.addLike(filmId, userId);
@@ -53,7 +53,7 @@ public class FilmService {
         User user = userService.findUserById(userId);
         if (!userStorage.getUsers().contains(user) || filmStorage.getFilm(filmId).isEmpty()) {
             log.warn("User'{}' did not like film with id {}", userId, filmId);
-            throw new ModelNotFoundException(String.format("User'{}' did not like film with id {}", userId, filmId));
+            throw new ModelNotFoundException(String.format("User %d did not like film with id %d", userId, filmId));
         }
         log.info("User'{}' likes film with id {}", userId, filmId);
         filmStorage.removeLike(filmId, userId);
