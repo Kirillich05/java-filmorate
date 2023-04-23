@@ -104,7 +104,7 @@ class UserDbStorageTest {
         userDbStorage.save(friend);
         userDbStorage.addFriend(user.getId(), friend.getId());
 
-        assertEquals(friend ,userDbStorage.getFriends(user.getId()).get(0),
+        assertEquals(friend, userDbStorage.getFriends(user.getId()).get(0),
                 "Друзья не совпадают");
     }
 
@@ -126,12 +126,12 @@ class UserDbStorageTest {
         userDbStorage.save(friend);
         userDbStorage.addFriend(user.getId(), friend.getId());
 
-        assertEquals(friend ,userDbStorage.getFriends(user.getId()).get(0),
+        assertEquals(friend, userDbStorage.getFriends(user.getId()).get(0),
                 "Друзья не совпадают");
 
         userDbStorage.unsubscribeFriend(user.getId(), friend.getId());
 
-        assertEquals(0 ,userDbStorage.getFriends(user.getId()).size(),
+        assertEquals(0, userDbStorage.getFriends(user.getId()).size(),
                 "Количество друзей не совпадает");
     }
 
@@ -154,9 +154,9 @@ class UserDbStorageTest {
         userDbStorage.addFriend(user.getId(), friend.getId());
 
         assertNotNull(userDbStorage.getFriends(user.getId()));
-        assertEquals(friend ,userDbStorage.getFriends(user.getId()).get(0),
+        assertEquals(friend, userDbStorage.getFriends(user.getId()).get(0),
                 "Друзья не совпадают");
-        assertEquals(1 ,userDbStorage.getFriends(user.getId()).size(),
+        assertEquals(1, userDbStorage.getFriends(user.getId()).size(),
                 "Количество друзей не совпадает");
     }
 
