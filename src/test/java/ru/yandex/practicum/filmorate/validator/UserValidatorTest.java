@@ -13,7 +13,7 @@ public class UserValidatorTest {
     @Test
     void checkEmptyEmail() {
         UserValidator userValidator = new UserValidator();
-        User user = new User();
+        User user = User.builder().build();
         user.setEmail("");
         assertThrows(ValidationException.class, () -> userValidator.validate(user));
 
@@ -24,7 +24,7 @@ public class UserValidatorTest {
     @Test
     void checkEmptyLogin() {
         UserValidator userValidator = new UserValidator();
-        User user = new User();
+        User user = User.builder().build();
         user.setEmail("karnel@yandex.ru");
         user.setLogin("");
         LocalDate birth = LocalDate.of(2000, 10, 2);
@@ -38,7 +38,7 @@ public class UserValidatorTest {
     @Test
     void checkBirthInFuture() {
         UserValidator userValidator = new UserValidator();
-        User user = new User();
+        User user = User.builder().build();
         user.setEmail("karnel@yandex.ru");
         user.setLogin("karnel");
         LocalDate dateInFuture = LocalDate.of(2100, 10, 2);
@@ -49,7 +49,7 @@ public class UserValidatorTest {
     @Test
     void checkEmptyName() {
         UserValidator userValidator = new UserValidator();
-        User user = new User();
+        User user = User.builder().build();
         user.setEmail("karnel@yandex.ru");
         user.setLogin("karnel");
         LocalDate birth = LocalDate.of(2000, 10, 2);
@@ -64,7 +64,7 @@ public class UserValidatorTest {
         UserValidator userValidator = new UserValidator();
         InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
-        User user = new User();
+        User user = User.builder().build();
         user.setEmail("karnel@yandex.ru");
         user.setLogin("karnel");
         LocalDate birth = LocalDate.of(2000, 10, 2);
@@ -79,7 +79,7 @@ public class UserValidatorTest {
     @Test
     void checkValidate() {
         UserValidator userValidator = new UserValidator();
-        User user = new User();
+        User user = User.builder().build();
         user.setEmail("karnel@yandex.ru");
         user.setLogin("karnel");
         LocalDate birth = LocalDate.of(2000, 10, 2);

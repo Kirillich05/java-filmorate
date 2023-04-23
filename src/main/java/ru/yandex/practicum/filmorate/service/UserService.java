@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -16,36 +17,32 @@ public class UserService {
     UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("db") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
-    public String addFriend(int userId, int otherUserId) {
+    public List<Integer> addFriend(int userId, int otherUserId) {
         User user = findUserById(userId);
         User otherUser = findUserById(otherUserId);
 
         if (userStorage.getUsers().contains(user) &&
                 userStorage.getUsers().contains(otherUser)) {
-            user.getFriends().add(otherUser.getId());
-            otherUser.getFriends().add(user.getId());
             log.info("User'{}' made friend {}", userId, otherUserId);
-            return "Made friends";
+            return userStorage.addFriend(userId, otherUserId);
         } else {
             log.warn("User'{}' did not make friend {}", userId, otherUserId);
             throw new ModelNotFoundException(String.format("User %d did not make friend %d", userId, otherUserId));
         }
     }
 
-    public User deleteFriend(int userId, int otherUserId) {
+    public List<Integer> deleteFriend(int userId, int otherUserId) {
         User user = findUserById(userId);
         User otherUser = findUserById(otherUserId);
 
         if (userStorage.getUsers().contains(user) &&
                 userStorage.getUsers().contains(otherUser)) {
-            user.getFriends().remove(otherUser.getId());
-            otherUser.getFriends().remove(user.getId());
             log.info("Deleted friend {} of user'{}'", otherUserId, userId);
-            return otherUser;
+            return userStorage.unsubscribeFriend(userId, otherUserId);
         } else {
             log.warn("Did not delete friend {} of user'{}'", otherUserId, userId);
             throw new ModelNotFoundException(String.format("Didn't delete friend %d of user'%d", otherUserId, userId));
@@ -53,16 +50,7 @@ public class UserService {
     }
 
     public List<User> getCommonFriends(int userId, int otherUserId) {
-        User user = findUserById(userId);
-        User otherUser = findUserById(otherUserId);
-        Set<Integer> intersectSet = new HashSet<>(user.getFriends());
-        intersectSet.retainAll(otherUser.getFriends());
-
-        List<User> commonFriends = new ArrayList<>();
-        for (Integer id : intersectSet) {
-            commonFriends.add(findUserById(id));
-        }
-        return commonFriends;
+        return userStorage.getCommonFriends(userId, otherUserId);
     }
 
     public User findUserById(Integer userId) {
@@ -75,12 +63,7 @@ public class UserService {
                 });
     }
 
-    public List<User> getFriends(int id) {
-        Set<Integer> friendsId = findUserById(id).getFriends();
-        List<User> friends = new ArrayList<>();
-        for (Integer i : friendsId) {
-            friends.add(findUserById(i));
-        }
-        return friends;
+    public Collection<User> getFriends(int id) {
+        return userStorage.getFriends(id);
     }
 }

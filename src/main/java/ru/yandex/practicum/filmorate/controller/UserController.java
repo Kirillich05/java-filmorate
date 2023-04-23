@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -29,7 +30,7 @@ public class UserController {
     FilmService filmService;
 
     @Autowired
-    public UserController(UserStorage repository, UserValidator userValidator,
+    public UserController(@Qualifier("db") UserStorage repository, UserValidator userValidator,
                           UserService userService, FilmService filmService) {
         this.repository = repository;
         this.userValidator = userValidator;
@@ -66,10 +67,10 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteUser(@PathVariable int id) {
+    public void deleteUser(@PathVariable int id) {
         log.info("Method: DELETE; delete user with ID = " + id);
         filmService.deleteLikesFromUser(id);
-        return repository.delete(id);
+        repository.delete(id);
     }
 
     @GetMapping("/{userId}")
@@ -81,13 +82,13 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
-    public String addFriend(@PathVariable int id, @PathVariable int friendId) {
+    public List<Integer> addFriend(@PathVariable int id, @PathVariable int friendId) {
         return userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
-    public User deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+    public List<Integer> deleteFriend(@PathVariable int id, @PathVariable int friendId) {
         return userService.deleteFriend(id, friendId);
     }
 

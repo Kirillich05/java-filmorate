@@ -24,13 +24,13 @@ class InMemoryUserStorageTest {
     public void init() {
         userStorage = new InMemoryUserStorage();
 
-        user1 = new User();
+        user1 = User.builder().build();
         user1.setName("Karl");
         user1.setEmail("karnel@yandex.ru");
         user1.setLogin("karnel");
         user1.setBirthday(LocalDate.of(2000, 10, 2));
 
-        user2 = new User();
+        user2 = User.builder().build();
         user2.setName("Mike");
         user2.setEmail("mike@yandex.ru");
         user2.setLogin("mikel");
@@ -121,19 +121,6 @@ class InMemoryUserStorageTest {
         filmService.deleteLikesFromUser(user1.getId());
         assertEquals(0, film1.getAmountFilmLikes(), "Не совпадает количество лайков");
         assertEquals(0, film2.getAmountFilmLikes(), "Не совпадает количество лайков");
-
-
-        userService.addFriend(user1.getId(), user2.getId());
-        assertEquals(1, userService.getFriends(2).size(), "Друзья не совпадают");
-        assertEquals(1, userService.getFriends(1).size(), "Друзья не совпадают");
-
-        userStorage.delete(user1.getId());
-        assertEquals(1, userStorage.getUsers().size(),
-                "Неверное количество пользователей в репозитории после удаления");
-        assertEquals(0, userService.getFriends(2).size(), "Друзья не совпадают");
-        List<User> users = new ArrayList<>(userStorage.getUsers());
-        assertEquals(user2, users.get(0),
-                "Не совпадают пользователи в репозитории после удаления");
     }
 
     @Test
