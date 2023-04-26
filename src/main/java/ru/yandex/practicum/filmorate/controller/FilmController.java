@@ -4,8 +4,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.AccessLevel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -14,12 +14,10 @@ import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequestMapping("/films")
-@Validated
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FilmController {
@@ -29,7 +27,7 @@ public class FilmController {
     FilmService filmService;
 
     @Autowired
-    public FilmController(FilmStorage repository, FilmValidator filmValidator,
+    public FilmController(@Qualifier("db") FilmStorage repository, FilmValidator filmValidator,
                           FilmService filmService) {
         this.repository = repository;
         this.filmValidator = filmValidator;
@@ -37,10 +35,10 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> findAll(HttpServletRequest request) {
+    public List<Film> findAll(HttpServletRequest request) {
         log.info("Get request to endpoint: '{} {}'",
                 request.getMethod(), request.getRequestURI());
-        return repository.getFilms();
+        return filmService.getFilms();
     }
 
     @PostMapping
@@ -65,9 +63,9 @@ public class FilmController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteFilm(@PathVariable int id) {
+    public void deleteFilm(@PathVariable int id) {
         log.info("Method: DELETE; delete film with ID = " + id);
-        return repository.delete(id);
+        repository.delete(id);
     }
 
     @GetMapping("/{id}")
@@ -81,13 +79,16 @@ public class FilmController {
     @ResponseStatus(HttpStatus.OK)
     public String addUsersLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Film with id: '{}' got user like with id '{}'", id, userId);
-        return filmService.addLike(id, userId);
+        filmService.addLike(id, userId);
+        return "Add like!";
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public Film deleteFriend(@PathVariable int id, @PathVariable int userId) {
-        return filmService.deleteLike(id, userId);
+    public String deleteLike(@PathVariable int id, @PathVariable int userId) {
+        log.info("Film with id: '{}' lost user like with id '{}'", id, userId);
+        filmService.deleteLike(id, userId);
+        return "Delete like!";
     }
 
     @GetMapping("/popular")

@@ -1,2 +1,3 @@
 # java-filmorate
-Template repository for Filmorate project.
+Filmorate - умеет обрабатывать и хранить данные о пользователях и их любимых фильмах.
+![bd_scheme](./java-filmorate-bd-scheme.png)
